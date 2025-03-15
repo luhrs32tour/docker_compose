@@ -1,2 +1,2 @@
-# docker_compose
-# compose file(s) location
+docker_compose
+compose file(s) location
