@@ -11,16 +11,85 @@ services:
       macvlan_100:
         ipv4_address: 10.69.1.110
       backend:
-        ipv4_address: 172.19.0.8
+        ipv4_address: 172.19.0.5
     volumes:
       - /docker_volumes/qbittorrent:/config
       - /torrent/media/downloads:/media/downloads
     environment:
-      - PUID=1000
-      - PGID=1000
-      - TZ=Etc/UTC
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
       - WEBUI_PORT=8080
       - TORRENTING_PORT=6881
+    restart: unless-stopped
+
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
+    ports:
+      - 9696:9696/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.109
+      backend:
+        ipv4_address: 172.19.0.4
+    volumes:
+      - /docker_volumes/prowlarr:/config
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+
+  radarr:
+    container_name: radarr
+    image: lscr.io/linuxserver/radarr:latest
+    ports:
+      - 7878:7878/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.112
+      backend:
+        ipv4_address: 172.19.0.3
+    volumes:
+      - /docker_volumes/radarr:/config
+      - /torrent/media:/media
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+
+  sonarr:
+    container_name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    ports:
+      - 8989:8989/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.111
+      backend:
+        ipv4_address: 172.19.0.6
+    volumes:
+      - /docker_volumes/sonarr:/config
+      - /torrent/media:/media
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    restart: unless-stopped
+
+  flaresolverr:
+    container_name: flaresolverr
+    image: flaresolverr/flaresolverr:latest
+    ports:
+      - 8191:9191/tcp
+    networks:
+      backend:
+        ipv4_address: 172.19.0.7
+    environment:
+      - TZ=${TZ}
+      - TEST_URL=https://www.google.com
     restart: unless-stopped
 
 networks:
