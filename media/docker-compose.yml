@@ -1,7 +1,32 @@
 ---
 services:
-  busybox:
-    image: busybox
-    restart: always
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    ports:
+      - 6881:6881/tcp
+      - 6881:6881/udp
+      - 8080:8080/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.110
+      backend:
+        ipv4_address: 172.19.0.8
+    volumes:
+      - /docker_volumes/qbittorrent:/config
+      - /torrent/media/downloads:/media/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - WEBUI_PORT=8080
+      - TORRENTING_PORT=6881
+    restart: unless-stopped
 
-test
+networks:
+  macvlan_100:
+    name: macvlan_100
+    external: true
+  backend:
+    name: backend
+    external: true
