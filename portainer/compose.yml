@@ -1,0 +1,20 @@
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ee:latest
+    ports:
+      - 8000:8000/tcp
+      - 9443:9443/tcp
+    networks:
+      macvlan_900:
+        ipv4_address: 10.69.9.20
+        mac_address: 6e:ce:0b:02:33:6b
+    volumes:
+      - /docker_volumes/portainer_data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+networks:
+  macvlan_900:
+    name: macvlan_900
+    external: true

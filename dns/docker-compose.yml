@@ -1,0 +1,90 @@
+---
+services:
+  pihole-03:
+    container_name: pihole-03
+    image: pihole/pihole:2025.03.0
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 80:80/tcp
+      - 443:443/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.160
+        mac_address: be:5c:65:7b:e8:60
+    volumes:
+      - /docker_volumes/pihole/pihole-03:/etc/pihole
+    env_file: pihole.env
+    cap_add:
+      - CAP_SYS_TIME
+      - CAP_SYS_NICE
+    restart: unless-stopped
+
+  pihole-04:
+    container_name: pihole-04
+    image: pihole/pihole:2025.03.0
+    ports:
+      - 53:53/tcp
+      - 53:53/udp
+      - 80:80/tcp
+      - 443:443/tcp
+    networks:
+      macvlan_100:
+        ipv4_address: 10.69.1.161
+        mac_address: 6a:4d:45:fd:6d:79
+    volumes:
+      - /docker_volumes/pihole/pihole-04:/etc/pihole
+    env_file: pihole.env
+    cap_add:
+      - CAP_SYS_TIME
+      - CAP_SYS_NICE
+    restart: unless-stopped
+#
+#  nebula-sync:
+#    container_name: nebula-sync
+#    image: ghcr.io/lovelaze/nebula-sync:latest
+#    env_file: nebula-sync.env
+#    networks:
+#      macvlan_100:
+#        ipv4_address: 10.69.1.162
+#        mac_address: 6a:4d:45:fd:6d:80
+#                                                            
+#  sonarr:
+#    container_name: sonarr
+#    image: lscr.io/linuxserver/sonarr:latest
+#    ports:
+#      - 8989:8989/tcp
+#    networks:
+#      macvlan_100:
+#        ipv4_address: 10.69.1.111
+#      backend:
+#        ipv4_address: 172.19.0.6
+#    volumes:
+#      - /docker_volumes/sonarr:/config
+#      - /torrent/media:/media
+#    environment:
+#      - PUID=${PUID}
+#      - PGID=${PGID}
+#      - TZ=${TZ}
+#    restart: unless-stopped
+#
+#  flaresolverr:
+#    container_name: flaresolverr
+#    image: flaresolverr/flaresolverr:latest
+#    ports:
+#      - 8191:9191/tcp
+#    networks:
+#      backend:
+#        ipv4_address: 172.19.0.7
+#    environment:
+#      - TZ=${TZ}
+#      - TEST_URL=https://www.google.com
+#    restart: unless-stopped
+#
+networks:
+  macvlan_100:
+    name: macvlan_100
+    external: true
+  backend:
+    name: backend#
+    external: true
